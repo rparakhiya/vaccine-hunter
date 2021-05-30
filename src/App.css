@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.filter-controls {
+  margin: 10px;
+}
+
+tr.available {
+  background-color: darkgreen;
+  color: white;
+}
+
+tr.few_available {
+  background-color: palegoldenrod;
+}
