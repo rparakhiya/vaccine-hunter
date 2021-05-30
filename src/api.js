@@ -1,11 +1,5 @@
 import dayjs from 'dayjs';
 
-function delay(seconds){
-    return new Promise(function(resolve){
-        setTimeout(resolve, seconds*1000);
-    });
-}
-
 export async function fetchVaccineAvailability(searchArea = 'district') {
     const today = dayjs();
     const dates = [
