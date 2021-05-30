@@ -11,6 +11,7 @@ function App() {
   const [dataUpdatedOn, setDataUpdatedOn] = useState(null);
   const [searchArea, setSearchArea] = useState('pincode');
   const [showAvailableCentersOnly, setShowAvailableCentersOnly] = useState(true);
+  const ageLimit = process.env.REACT_APP_AGE_LIMIT;
 
   function refreshData() {
     return fetchVaccineAvailability(searchArea)
@@ -39,7 +40,7 @@ function App() {
 
   function renderCenter(availability) {
     return _(availability?.centers)?.map(center => {
-        const sessions = center.sessions.filter(session => session.min_age_limit === 18);
+        const sessions = center.sessions.filter(session => session.min_age_limit === ageLimit);
         const doses = sessions.reduce((totalDoses, session) => totalDoses + session.available_capacity_dose1, 0);
         
         return {
@@ -125,7 +126,7 @@ function App() {
             <Table.HeaderCell>Date</Table.HeaderCell>
             <Table.HeaderCell>Center</Table.HeaderCell>
             <Table.HeaderCell>Address</Table.HeaderCell>
-            <Table.HeaderCell>Available Slots (18+)</Table.HeaderCell>
+            <Table.HeaderCell>{`Available Slots (${ageLimit}+)`}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
