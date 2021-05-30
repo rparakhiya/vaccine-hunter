@@ -1,20 +1,17 @@
 import {useState} from 'react';
-import './App.css';
-import { fetchVaccineAvailability } from './api';
+import { fetchVaccineAvailability } from './fetchVaccineAvailability';
 import { Checkbox, Table } from 'semantic-ui-react'
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 
-function App() {
-  const [vaccineAvailability, setVaccineAvailability] = useState([]);
+function AvailabilityTracker({ageLimit, searchArea, areaCode, vaccineAvailabilityInitialData}) {
+  const [vaccineAvailability, setVaccineAvailability] = useState(vaccineAvailabilityInitialData);
   const [dataUpdatedOn, setDataUpdatedOn] = useState(null);
-  const [searchArea, setSearchArea] = useState('pincode');
   const [showAvailableCentersOnly, setShowAvailableCentersOnly] = useState(true);
-  const ageLimit = process.env.REACT_APP_AGE_LIMIT;
 
   function refreshData() {
-    return fetchVaccineAvailability(searchArea)
+    return fetchVaccineAvailability(searchArea, areaCode)
         .then(availability => {
           setVaccineAvailability(availability);
           setDataUpdatedOn(dayjs());
@@ -82,24 +79,6 @@ function App() {
     return (
       <>
         <Checkbox
-          radio
-          label='Pincode'
-          name='location'
-          value='pincode'
-          checked={searchArea === 'pincode'}
-          onChange={searchAreaChanged}
-          className="filter-controls"
-        />
-        <Checkbox
-          radio
-          label='District'
-          name='location'
-          value='district'
-          checked={searchArea === 'district'}
-          onChange={searchAreaChanged}
-          className="filter-controls"
-        />
-        <Checkbox
           toggle
           label='Show Available Centers Only'
           name='available_centers_only'
@@ -145,4 +124,4 @@ function App() {
   );
 }
 
-export default App;
+export default AvailabilityTracker;
