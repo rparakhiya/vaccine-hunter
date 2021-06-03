@@ -11,23 +11,23 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Link href="/pincode/411014/18">
+        <Link href="/pincode/411014/dose/1/18">
           <a>Pune (411014) - 18+</a>
         </Link>
-        <Link href="/district/363/18">
+        <Link href="/district/363/dose/1/18">
           <a>Pune (District) - 18+</a>
         </Link>
         <hr />
-        <Link href="/pincode/360005/18">
+        <Link href="/pincode/360005/dose/1/18">
           <a>Rajkot (360005) - 18+</a>
         </Link>
-        <Link href="/pincode/360005/45">
+        <Link href="/pincode/360005/dose/2/45">
           <a>Rajkot (360005) - 45+</a>
         </Link>
-        <Link href="/district/173/18">
+        <Link href="/district/173/dose/1/18">
           <a>Rajkot (District) - 18+</a>
         </Link>
-        <Link href="/district/173/45">
+        <Link href="/district/173/dose/2/45">
           <a>Rajkot (District) - 45+</a>
         </Link>
       </main>

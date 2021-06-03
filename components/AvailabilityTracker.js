@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 
-function AvailabilityTracker({ageLimit, searchArea, areaCode, vaccineAvailabilityInitialData}) {
+function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccineAvailabilityInitialData}) {
   const [vaccineAvailability, setVaccineAvailability] = useState(vaccineAvailabilityInitialData);
   const [dataUpdatedOn, setDataUpdatedOn] = useState(null);
   const [showAvailableCentersOnly, setShowAvailableCentersOnly] = useState(true);
@@ -37,8 +37,11 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, vaccineAvailabilit
 
   function renderCenter(availability) {
     return _(availability?.centers)?.map(center => {
-        const sessions = center.sessions.filter(session => session.min_age_limit === ageLimit);
-        const doses = sessions.reduce((totalDoses, session) => totalDoses + session.available_capacity_dose1, 0);
+        const sessions = center.sessions
+          .filter(session => session.min_age_limit === ageLimit)
+          .map(session => session.requestedDoses = doseNumber.toString() === '1' ? session.available_capacity_dose1 : session.available_capacity_dose2);
+
+        const doses = sessions.reduce((totalDoses, session) => totalDoses + session.requestedDoses, 0);
         
         return {
           date: availability.date,

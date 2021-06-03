@@ -1,12 +1,12 @@
 import Head from "next/head";
-import styles from "../../../styles/Home.module.css";
-import AvailabilityTracker from "../../../components/AvailabilityTracker";
+import styles from "../../../../../styles/Home.module.css";
+import AvailabilityTracker from "../../../../../components/AvailabilityTracker";
 import { useRouter } from "next/router";
-import { fetchVaccineAvailability } from "../../../components/fetchVaccineAvailability";
+import { fetchVaccineAvailability } from "../../../../../components/fetchVaccineAvailability";
 
 export default function AvailabilityByPincode({vaccineAvailability}) {
   const router = useRouter();
-  const { searchArea, areaCode, ageLimit } = router.query;
+  const { searchArea, areaCode, ageLimit, doseNumber } = router.query;
 
   return (
     <div className={styles.container}>
@@ -21,6 +21,7 @@ export default function AvailabilityByPincode({vaccineAvailability}) {
           searchArea={searchArea}
           areaCode={areaCode}
           ageLimit={ageLimit}
+          doseNumber={doseNumber}
           vaccineAvailabilityInitialData={vaccineAvailability}
         />
       </main>
