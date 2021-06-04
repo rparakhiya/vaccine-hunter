@@ -40,7 +40,7 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
         const availableSlots = center.sessions
           .filter(session => session.min_age_limit == ageLimit)
           .map(session => ({
-            vaccine: session.vaccine,
+            vaccine: `${session.date}~~${session.vaccine}`,
             requestedDoses: doseNumber.toString() == '1' ? session.available_capacity_dose1 : session.available_capacity_dose2
           }));
 
@@ -52,11 +52,11 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
         for(let vaccine in groups)
         {
           sessions.push({
-            date: availability.date,
+            date: vaccine.split('~~')[0],
             name: center.name,
             center_id: center.center_id,
             address: center.address,
-            vaccine: vaccine,
+            vaccine: vaccine.split('~~')[1],
             doses: groups[vaccine].reduce((totalSlots, session) => totalSlots + session.requestedDoses, 0)
           })
         }
