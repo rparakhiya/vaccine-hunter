@@ -36,20 +36,32 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
   }
 
   function renderCenter(availability) {
-    return _(availability?.centers)?.map(center => {
+    return _(availability?.centers)?.flatMap(center => {
         const availableSlots = center.sessions
           .filter(session => session.min_age_limit == ageLimit)
-          .map(session => session.requestedDoses = doseNumber.toString() == '1' ? session.available_capacity_dose1 : session.available_capacity_dose2);
+          .map(session => ({
+            vaccine: session.vaccine,
+            requestedDoses: doseNumber.toString() == '1' ? session.available_capacity_dose1 : session.available_capacity_dose2
+          }));
 
-        const totalSlots = availableSlots.reduce((totalSlots, slots) => totalSlots + slots, 0);
+        const groups = _(availableSlots)
+                              .groupBy(slots => slots.vaccine).value();
+                              // .reduce((totalSlots, session) => totalSlots + session.requestedDoses, 0);
+
+        const sessions = [];
+        for(let vaccine in groups)
+        {
+          sessions.push({
+            date: availability.date,
+            name: center.name,
+            center_id: center.center_id,
+            address: center.address,
+            vaccine: vaccine,
+            doses: groups[vaccine].reduce((totalSlots, session) => totalSlots + session.requestedDoses, 0)
+          })
+        }
         
-        return {
-          date: availability.date,
-          name: center.name,
-          center_id: center.center_id,
-          address: center.address,
-          doses: totalSlots
-        };
+        return sessions;
       })
       .sortBy(row => row.doses)
       .reverse().value()
@@ -58,6 +70,7 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
             <Table.Cell>{row.date}</Table.Cell>
             <Table.Cell>{row.name}</Table.Cell>
             <Table.Cell>{row.address}</Table.Cell>
+            <Table.Cell>{row.vaccine}</Table.Cell>
             <Table.Cell>{row.doses}</Table.Cell>
         </Table.Row>)
       );
@@ -67,7 +80,7 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
     const rows = _(vaccineAvailability)?.flatMap(availability => renderCenter(availability)).value();
     return rows.length > 0 ? rows : (
       <Table.Row>
-        <Table.Cell colSpan="4" textAlign="center">
+        <Table.Cell colSpan="5" textAlign="center">
           No slots available! 😕
         </Table.Cell>
       </Table.Row>
@@ -100,7 +113,7 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
       <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell colSpan="4">
+            <Table.HeaderCell colSpan="5">
                 {RenderFilterControls()}
             </Table.HeaderCell>
           </Table.Row>
@@ -108,6 +121,7 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
             <Table.HeaderCell>Date</Table.HeaderCell>
             <Table.HeaderCell>Center</Table.HeaderCell>
             <Table.HeaderCell>Address</Table.HeaderCell>
+            <Table.HeaderCell>Vaccine</Table.HeaderCell>
             <Table.HeaderCell>{`Available Slots (${ageLimit}+)`}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -117,7 +131,7 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
         </Table.Body>
         <Table.Footer>
           <Table.Row>
-            <Table.HeaderCell colSpan='4'>
+            <Table.HeaderCell colSpan='5'>
               Last updated on: {dataUpdatedOn?.format('DD-MM-YYYY hh:mm:ss a')}
             </Table.HeaderCell>
           </Table.Row>
