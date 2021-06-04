@@ -14,3 +14,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+tr.available {
+  background-color: darkgreen;
+  color: white;
+}
+
+tr.few_available {
+  background-color: palegoldenrod;
+}
