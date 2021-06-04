@@ -37,18 +37,18 @@ function AvailabilityTracker({ageLimit, searchArea, areaCode, doseNumber, vaccin
 
   function renderCenter(availability) {
     return _(availability?.centers)?.map(center => {
-        const sessions = center.sessions
-          .filter(session => session.min_age_limit === ageLimit)
-          .map(session => session.requestedDoses = doseNumber.toString() === '1' ? session.available_capacity_dose1 : session.available_capacity_dose2);
+        const availableSlots = center.sessions
+          .filter(session => session.min_age_limit == ageLimit)
+          .map(session => session.requestedDoses = doseNumber.toString() == '1' ? session.available_capacity_dose1 : session.available_capacity_dose2);
 
-        const doses = sessions.reduce((totalDoses, session) => totalDoses + session.requestedDoses, 0);
+        const totalSlots = availableSlots.reduce((totalSlots, slots) => totalSlots + slots, 0);
         
         return {
           date: availability.date,
           name: center.name,
           center_id: center.center_id,
           address: center.address,
-          doses: doses
+          doses: totalSlots
         };
       })
       .sortBy(row => row.doses)
